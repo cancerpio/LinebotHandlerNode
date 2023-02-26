@@ -1,0 +1,21 @@
+{
+  "name": "linebothandler-node",
+  "version": "1.0.0",
+  "description": "AWS Lambda function for linebot handler",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "author": "Cancerpio",
+  "license": "MIT",
+  "dependencies": {
+    "@line/bot-sdk": "^7.5.2",
+    "dotenv": "^16.0.3",
+    "openai": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}
