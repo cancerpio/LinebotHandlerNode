@@ -1,22 +1,48 @@
 const { produceMessage } = require('./utils/kafka/producer');
+require('dotenv').config();
 
-produceMessage({
-  topic: 'TEST_INITIALIZE_LOCAL_TOPIC',
-  messages: [{ key: 'Date', value: new Date().toUTCString() }],
-});
+const kafkaTopic = process.env.KAFKA_TOPIC;
 
 exports.handler = async function (event, context) {
-  await produceMessage({
-    topic: 'TEST_INITIALIZE_LAMBDA_HANDLER_TOPIC',
-    messages: [{ key: 'Date', value: new Date().toUTCString() }],
-  });
+  // await produceMessage({
+  //   topic: 'TEST_INITIALIZE_LAMBDA_HANDLER_TOPIC',
+  //   messages: [{ key: 'Date', value: new Date().toUTCString() }],
+  // });
 
   const { body } = event;
   const bodyContent = JSON.parse(body);
   const { events } = bodyContent;
+  const produceKafkaResults = [];
   events.forEach((e) => {
-    console.log(e);
+    if (e.type === 'message' && e.message !== undefined && e.message.type === 'text') {
+      const {
+        source: {
+          userId,
+        },
+        message: {
+          text,
+        },
+        timestamp,
+        replyToken,
+      } = e;
+
+      produceKafkaResults.push(produceMessage({
+        topic: kafkaTopic,
+        messages: [{
+          key: 'text',
+          value: JSON.stringify({
+            userId,
+            text,
+            timestamp,
+            replyToken,
+            date: new Date().toUTCString(),
+          }),
+        }],
+      }));
+    }
   });
+
+  await Promise.all(produceKafkaResults);
 
   return context.logStreamName;
 };
