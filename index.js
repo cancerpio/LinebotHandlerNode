@@ -29,7 +29,7 @@ exports.handler = async function (event, context) {
       produceKafkaResults.push(produceMessage({
         topic: kafkaTopic,
         messages: [{
-          key: 'text',
+          key: userId,
           value: JSON.stringify({
             userId,
             text,
