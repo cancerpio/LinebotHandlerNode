@@ -4,11 +4,6 @@ require('dotenv').config();
 const kafkaTopic = process.env.KAFKA_TOPIC;
 
 exports.handler = async function (event, context) {
-  // await produceMessage({
-  //   topic: 'TEST_INITIALIZE_LAMBDA_HANDLER_TOPIC',
-  //   messages: [{ key: 'Date', value: new Date().toUTCString() }],
-  // });
-
   const { body } = event;
   const bodyContent = JSON.parse(body);
   const { events } = bodyContent;
