@@ -6,5 +6,5 @@ https://github.com/cancerpio/linebot-handler-node/blob/master/deploy.sh
 `function`: Function name on AWS Lambda, if not set, the default value will be "LinebotHandlerNode"
 ## Command
 ````
-function=LinebotHandlerNode /deploy.sh
+function=LinebotHandlerNode ./deploy.sh
 ````
