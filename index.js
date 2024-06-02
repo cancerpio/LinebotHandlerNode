@@ -1,9 +1,8 @@
 const { produceMessage } = require('./utils/kafka/producer');
 require('dotenv').config();
 
-const kafkaTopic = process.env.KAFKA_TOPIC;
-
-exports.handler = async function (event, context) {
+const nextPageHandler = async (event, context) => {
+  const kafkaTopic = process.env.KAFKA_TOPIC;
   const { body } = event;
   const bodyContent = JSON.parse(body);
   const { events } = bodyContent;
@@ -38,8 +37,12 @@ exports.handler = async function (event, context) {
   });
 
   await Promise.all(produceKafkaResults);
-
   return context.logStreamName;
+};
+
+exports.handler = async function (event, context) {
+  const handler = nextPageHandler;
+  await handler(event, context);
 };
 
 // exports.handler = async function (event, context) {
