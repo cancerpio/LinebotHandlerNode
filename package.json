@@ -9,6 +9,7 @@
   "author": "Cancerpio",
   "license": "MIT",
   "dependencies": {
+    "@line/bot-sdk": "^9.2.2",
     "aws-xray-sdk": "^3.4.1",
     "dotenv": "^16.0.3",
     "kafkajs": "^2.2.4",
