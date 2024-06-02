@@ -40,8 +40,16 @@ const nextPageHandler = async (event, context) => {
   return context.logStreamName;
 };
 
+const handlerFactory = (name) => {
+  const functionCode = {
+    nextPage: nextPageHandler,
+  };
+
+  return functionCode[name];
+};
+
 exports.handler = async function (event, context) {
-  const handler = nextPageHandler;
+  const handler = handlerFactory('nextPage');
   await handler(event, context);
 };
 
