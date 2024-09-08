@@ -1,6 +1,13 @@
 const { produceMessage } = require('./utils/kafka/producer');
 require('dotenv').config();
 
+/**
+ * Handles the nextPage event.
+ *
+ * @param {Object} event - The event object.
+ * @param {Object} context - The context object.
+ * @returns {string} - The log stream name.
+ */
 const nextPageHandler = async (event, context) => {
   const kafkaTopic = process.env.KAFKA_TOPIC;
   const { body } = event;
@@ -52,7 +59,7 @@ const inComingHandler = async (event, context) => {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
   });
 
-  events.forEach(async (e) => {
+  await Promise.all(events.map(async (e) => {
     if (e.type === 'message' && e.message !== undefined && e.message.type === 'text') {
       const {
         source: {
@@ -69,9 +76,12 @@ const inComingHandler = async (event, context) => {
       // create a echoing text message
       const echo = { type: 'text', text: `${userId} say: ${text} at ${formatDate}` };
       // use reply API
-      await client.replyMessage(replyToken, echo);
+      await client.replyMessage({
+        replyToken,
+        messages: [echo],
+      });
     }
-  });
+  }));
 
   return context.logStreamName;
 };
