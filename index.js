@@ -2,13 +2,13 @@ const { produceMessage } = require('./utils/kafka/producer');
 require('dotenv').config();
 
 /**
- * Handles the nextPage event.
+ * Handles the kafka event.
  *
  * @param {Object} event - The event object.
  * @param {Object} context - The context object.
  * @returns {string} - The log stream name.
  */
-const nextPageHandler = async (event, context) => {
+const kafkaHandler = async (event, context) => {
   const kafkaTopic = process.env.KAFKA_TOPIC;
   const { body } = event;
   const bodyContent = JSON.parse(body);
@@ -47,7 +47,7 @@ const nextPageHandler = async (event, context) => {
   return context.logStreamName;
 };
 
-const inComingHandler = async (event, context) => {
+const linePlatformHandler = async (event, context) => {
   // eslint-disable-next-line
   const line = require('@line/bot-sdk');
   const { body } = event;
@@ -87,14 +87,14 @@ const inComingHandler = async (event, context) => {
 };
 const handlerFactory = (name) => {
   const functionCode = {
-    nextPage: nextPageHandler,
-    incoming: inComingHandler,
+    kafka: kafkaHandler,
+    linePlatform: linePlatformHandler,
   };
 
   return functionCode[name];
 };
 
 exports.handler = async function (event, context) {
-  const handler = handlerFactory('incoming');
+  const handler = handlerFactory('kafka');
   await handler(event, context);
 };
